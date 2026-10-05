@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Canvas 1920 × 1703</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <form id="result-search" class="result-search" aria-label="Buscar combinação" novalidate>
+    <div class="number-inputs">
+      <label class="number-field"><span aria-hidden="true">01</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 01" value="1"></label>
+      <label class="number-field"><span aria-hidden="true">02</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 02" value="2"></label>
+      <label class="number-field"><span aria-hidden="true">03</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 03" value="3"></label>
+      <label class="number-field"><span aria-hidden="true">04</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 04" value="4"></label>
+      <label class="number-field"><span aria-hidden="true">05</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 05" value="5"></label>
+      <label class="number-field"><span aria-hidden="true">06</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 06" value="6"></label>
+      <label class="number-field"><span aria-hidden="true">07</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 07" value="7"></label>
+      <label class="number-field"><span aria-hidden="true">08</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 08" value="8"></label>
+      <label class="number-field"><span aria-hidden="true">09</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 09" value="9"></label>
+      <label class="number-field"><span aria-hidden="true">10</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 10" value="10"></label>
+      <label class="number-field"><span aria-hidden="true">11</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 11" value="11"></label>
+      <label class="number-field"><span aria-hidden="true">12</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 12" value="12"></label>
+      <label class="number-field"><span aria-hidden="true">13</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 13" value="13"></label>
+      <label class="number-field"><span aria-hidden="true">14</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 14" value="14"></label>
+      <label class="number-field"><span aria-hidden="true">15</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 15" value="15"></label>
+    </div>
+    <button type="submit">Localizar</button>
+    <output id="search-status" class="search-status" aria-live="polite"></output>
+  </form>
+  <form id="draw-search" class="result-search draw-search" aria-label="Resultado do sorteio" novalidate>
+    <div class="number-inputs">
+      <label class="number-field"><span aria-hidden="true">01</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 01"></label>
+      <label class="number-field"><span aria-hidden="true">02</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 02"></label>
+      <label class="number-field"><span aria-hidden="true">03</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 03"></label>
+      <label class="number-field"><span aria-hidden="true">04</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 04"></label>
+      <label class="number-field"><span aria-hidden="true">05</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 05"></label>
+      <label class="number-field"><span aria-hidden="true">06</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 06"></label>
+      <label class="number-field"><span aria-hidden="true">07</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 07"></label>
+      <label class="number-field"><span aria-hidden="true">08</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 08"></label>
+      <label class="number-field"><span aria-hidden="true">09</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 09"></label>
+      <label class="number-field"><span aria-hidden="true">10</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 10"></label>
+      <label class="number-field"><span aria-hidden="true">11</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 11"></label>
+      <label class="number-field"><span aria-hidden="true">12</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 12"></label>
+      <label class="number-field"><span aria-hidden="true">13</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 13"></label>
+      <label class="number-field"><span aria-hidden="true">14</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 14"></label>
+      <label class="number-field"><span aria-hidden="true">15</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 15"></label>
+    </div>
+    <button type="submit">Gerar</button>
+    <button id="draw-random" class="secondary-action" type="button">Aleatório</button>
+    <output id="draw-status" class="search-status" aria-live="polite"></output>
+  </form>
+  <dialog id="validation-dialog" class="validation-dialog" aria-labelledby="validation-title">
+    <h2 id="validation-title">Não foi possível localizar</h2>
+    <p id="validation-message"></p>
+    <form method="dialog">
+      <button type="submit" autofocus>Entendi</button>
+    </form>
+  </dialog>
+  <dialog id="selection-dialog" class="validation-dialog selection-dialog" aria-labelledby="selection-title">
+    <h2 id="selection-title">Cartões selecionados</h2>
+    <p id="selection-total"></p>
+    <ul class="selection-counts">
+      <li><span><i class="selection-swatch selection-swatch--zero"></i>0 pontos (sem prêmio)</span><strong id="selection-count-0"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--11"></i>11 pontos</span><strong id="selection-count-11"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--12"></i>12 pontos</span><strong id="selection-count-12"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--13"></i>13 pontos</span><strong id="selection-count-13"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--14"></i>14 pontos</span><strong id="selection-count-14"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--15"></i>15 pontos</span><strong id="selection-count-15"></strong></li>
+    </ul>
+    <div class="selection-dialog-actions">
+      <button id="show-selection-cards" type="button">Ver cartões</button>
+      <form method="dialog">
+        <button type="submit" autofocus>Fechar</button>
+      </form>
+    </div>
+  </dialog>
+  <dialog id="selection-cards-dialog" class="validation-dialog selection-cards-dialog" aria-labelledby="selection-cards-title">
+    <h2 id="selection-cards-title">Cartões na seleção</h2>
+    <p id="selection-page-label"></p>
+    <ol id="selection-card-list" class="selection-card-list"></ol>
+    <nav class="selection-pagination" aria-label="Paginação dos cartões">
+      <button id="selection-previous" type="button">Anterior</button>
+      <button id="selection-next" type="button">Próxima</button>
+    </nav>
+    <form method="dialog">
+      <button type="submit" autofocus>Fechar lista</button>
+    </form>
+  </dialog>
+  <div class="canvas-wrap">
+    <canvas id="canvas" width="1920" height="1703" aria-label="Resultados da Lotofácil. Mova o mouse para ver uma combinação. Arraste com o botão esquerdo para selecionar uma região.">
+      Seu navegador não oferece suporte ao elemento canvas.
+    </canvas>
+    <canvas id="highlight-canvas" class="highlight-canvas" width="1920" height="1703" aria-hidden="true"></canvas>
+    <canvas id="selection-canvas" class="selection-canvas" width="1920" height="1703" aria-hidden="true"></canvas>
+  </div>
+  <output id="result-popup" class="result-popup" aria-live="polite" hidden>
+    <span id="result-position" class="result-popup__position"></span>
+    <span id="result-numbers" class="result-popup__numbers"></span>
+    <span id="result-score" class="result-popup__score" data-tier="unknown"></span>
+  </output>
+  <footer class="canvas-size-bar" aria-label="Dimensões do canvas">
+    <span>Canvas</span>
+    <strong id="canvas-dimensions"></strong>
+  </footer>
+  <script src="main.js"></script>
+</body>
+</html>
