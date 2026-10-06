@@ -86,9 +86,9 @@ body {
 }
 
 .result-search button {
-  min-width: 110px;
+  min-width: 0;
   height: 36px;
-  padding: 0 16px;
+  padding: 0 10px;
   border: 0;
   border-radius: 3px;
   background: #176b57;
@@ -215,6 +215,34 @@ body {
   height: 16px;
   margin: 0;
   accent-color: #176b57;
+}
+
+.hit-filter-swatch {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgb(24 37 43 / 18%);
+  border-radius: 2px;
+}
+
+.hit-filter-swatch--11 {
+  background: #fff176;
+}
+
+.hit-filter-swatch--12 {
+  background: #fdd835;
+}
+
+.hit-filter-swatch--13 {
+  background: #4caf50;
+}
+
+.hit-filter-swatch--14 {
+  background: #fb8c00;
+}
+
+.hit-filter-swatch--15 {
+  background: #d32f2f;
 }
 
 .hit-filter-all {

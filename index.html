@@ -9,7 +9,7 @@
 <body>
   <form id="result-search" class="result-search" aria-label="Buscar combinação" novalidate>
     <div class="number-group">
-      <h2 class="number-group__title">Jogo</h2>
+      <h2 class="number-group__title">Cartão</h2>
     <div class="number-inputs">
       <label class="number-field"><span aria-hidden="true">01</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 01" value="1"></label>
       <label class="number-field"><span aria-hidden="true">02</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 02" value="2"></label>
@@ -55,6 +55,7 @@
     <button type="submit">Gerar</button>
     <button id="draw-random" class="secondary-action" type="button">Aleatório</button>
     <button id="open-hit-filter" class="secondary-action" type="button">Filtro</button>
+    <button id="open-selection" class="secondary-action" type="button" aria-haspopup="dialog" aria-controls="selection-dialog" disabled>Mostrar seleção</button>
     <output id="draw-status" class="search-status" aria-live="polite"></output>
   </form>
   <dialog id="validation-dialog" class="validation-dialog" aria-labelledby="validation-title">
@@ -70,11 +71,11 @@
       <label class="hit-filter-option hit-filter-all"><input id="hit-filter-all" type="checkbox" checked>Mostrar tudo</label>
       <fieldset class="hit-filter-options">
         <legend>Faixas de acertos</legend>
-        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="11" checked><span>11 acertos</span><strong id="hit-filter-count-11">—</strong></label>
-        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="12" checked><span>12 acertos</span><strong id="hit-filter-count-12">—</strong></label>
-        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="13" checked><span>13 acertos</span><strong id="hit-filter-count-13">—</strong></label>
-        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="14" checked><span>14 acertos</span><strong id="hit-filter-count-14">—</strong></label>
-        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="15" checked><span>15 acertos</span><strong id="hit-filter-count-15">—</strong></label>
+        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="11" checked><span class="hit-filter-swatch hit-filter-swatch--11" aria-hidden="true"></span><span>11 acertos</span><strong id="hit-filter-count-11">—</strong></label>
+        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="12" checked><span class="hit-filter-swatch hit-filter-swatch--12" aria-hidden="true"></span><span>12 acertos</span><strong id="hit-filter-count-12">—</strong></label>
+        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="13" checked><span class="hit-filter-swatch hit-filter-swatch--13" aria-hidden="true"></span><span>13 acertos</span><strong id="hit-filter-count-13">—</strong></label>
+        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="14" checked><span class="hit-filter-swatch hit-filter-swatch--14" aria-hidden="true"></span><span>14 acertos</span><strong id="hit-filter-count-14">—</strong></label>
+        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="15" checked><span class="hit-filter-swatch hit-filter-swatch--15" aria-hidden="true"></span><span>15 acertos</span><strong id="hit-filter-count-15">—</strong></label>
       </fieldset>
       <div class="hit-filter-actions">
         <button id="cancel-hit-filter" class="secondary-action" type="button">Cancelar</button>

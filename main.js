@@ -21,6 +21,7 @@ const drawInputs = [...drawForm.querySelectorAll('.number-input')];
 const drawStatus = document.getElementById('draw-status');
 const randomDrawButton = document.getElementById('draw-random');
 const openHitFilterButton = document.getElementById('open-hit-filter');
+const openSelectionButton = document.getElementById('open-selection');
 const hitFilterDialog = document.getElementById('hit-filter-dialog');
 const hitFilterForm = document.getElementById('hit-filter-form');
 const hitFilterAll = document.getElementById('hit-filter-all');
@@ -84,36 +85,18 @@ function focusAndSelectInput(input) {
 
 function enableInputAutoAdvance(inputs) {
   inputs.forEach((input, index) => {
-    let singleDigitTimer = 0;
-
     padSingleDigitInput(input);
     input.addEventListener('blur', () => {
-      window.clearTimeout(singleDigitTimer);
       padSingleDigitInput(input);
     });
 
     input.addEventListener('input', (event) => {
       limitNumberInputLength(event);
-      window.clearTimeout(singleDigitTimer);
 
       const nextInput = inputs[index + 1];
 
-      if (nextInput === undefined) {
-        return;
-      }
-
-      if (input.value.length >= 2) {
+      if (nextInput !== undefined && input.value.length === 2) {
         focusAndSelectInput(nextInput);
-        return;
-      }
-
-      if (input.value.length === 1) {
-        singleDigitTimer = window.setTimeout(() => {
-          if (document.activeElement === input && input.value.length === 1) {
-            padSingleDigitInput(input);
-            focusAndSelectInput(nextInput);
-          }
-        }, 500);
       }
     });
   });
@@ -519,6 +502,7 @@ function showSelectionSummary(selection) {
   }
 
   updateSelectionPrizeTotal();
+  openSelectionButton.disabled = false;
   selectionDialog.showModal();
 }
 
@@ -754,6 +738,11 @@ canvas.addEventListener('pointerleave', () => {
   }
 });
 
+openSelectionButton.addEventListener('click', () => {
+  if (currentSelectionBounds !== null && !selectionDialog.open) {
+    selectionDialog.showModal();
+  }
+});
 showSelectionCardsButton.addEventListener('click', openSelectionCards);
 selectionPreviousButton.addEventListener('click', goToPreviousSelectionPage);
 selectionNextButton.addEventListener('click', goToNextSelectionPage);
