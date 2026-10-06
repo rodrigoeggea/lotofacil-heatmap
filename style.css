@@ -9,8 +9,12 @@ body {
   margin: 0;
 }
 
+html {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
 body {
-  overflow: auto;
   padding-bottom: 54px;
   background: #e8edf0;
 }
@@ -118,6 +122,15 @@ body {
   overflow-wrap: anywhere;
   color: #34434a;
   font: 12px/1.4 system-ui, sans-serif;
+}
+
+#result-search .search-status {
+  flex: 0 0 100%;
+  max-width: none;
+}
+
+#result-search .search-status:empty {
+  display: none;
 }
 
 .draw-search .search-status {
@@ -433,6 +446,23 @@ body {
 
 .selection-canvas {
   pointer-events: none;
+}
+
+.selection-live-count {
+  position: fixed;
+  z-index: 4;
+  padding: 6px 9px;
+  border: 1px solid #176b57;
+  border-radius: 3px;
+  background: #fff;
+  color: #18252b;
+  box-shadow: 0 2px 8px rgb(14 30 37 / 18%);
+  font: 600 12px/1.2 system-ui, sans-serif;
+  pointer-events: none;
+}
+
+.selection-live-count[hidden] {
+  display: none;
 }
 
 .result-popup {

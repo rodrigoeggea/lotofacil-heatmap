@@ -8,6 +8,7 @@ const highlightCanvas = document.getElementById('highlight-canvas');
 const highlightContext = highlightCanvas.getContext('2d');
 const selectionCanvas = document.getElementById('selection-canvas');
 const selectionContext = selectionCanvas.getContext('2d');
+const selectionLiveCount = document.getElementById('selection-live-count');
 const popup = document.getElementById('result-popup');
 const positionLabel = document.getElementById('result-position');
 const numbersLabel = document.getElementById('result-numbers');
@@ -42,6 +43,65 @@ const selectionNextButton = document.getElementById('selection-next');
 
 const numberCount = 25;
 const numbersPerResult = 15;
+
+function limitNumberInputLength(event) {
+  const input = event.currentTarget;
+
+  if (input.value.length > 2) {
+    input.value = input.value.slice(0, 2);
+  }
+}
+
+function padSingleDigitInput(input) {
+  if (/^\d$/.test(input.value)) {
+    input.value = input.value.padStart(2, '0');
+  }
+}
+
+function focusAndSelectInput(input) {
+  input.focus();
+  input.select();
+}
+
+function enableInputAutoAdvance(inputs) {
+  inputs.forEach((input, index) => {
+    let singleDigitTimer = 0;
+
+    padSingleDigitInput(input);
+    input.addEventListener('blur', () => {
+      window.clearTimeout(singleDigitTimer);
+      padSingleDigitInput(input);
+    });
+
+    input.addEventListener('input', (event) => {
+      limitNumberInputLength(event);
+      window.clearTimeout(singleDigitTimer);
+
+      const nextInput = inputs[index + 1];
+
+      if (nextInput === undefined) {
+        return;
+      }
+
+      if (input.value.length >= 2) {
+        focusAndSelectInput(nextInput);
+        return;
+      }
+
+      if (input.value.length === 1) {
+        singleDigitTimer = window.setTimeout(() => {
+          if (document.activeElement === input && input.value.length === 1) {
+            padSingleDigitInput(input);
+            focusAndSelectInput(nextInput);
+          }
+        }, 500);
+      }
+    });
+  });
+}
+
+enableInputAutoAdvance(numberInputs);
+enableInputAutoAdvance(drawInputs);
 
 function combinationCount(total, selected) {
   let count = 1;
@@ -135,6 +195,29 @@ function getValidNumbers(inputs, subject) {
 
   if (new Set(result).size !== numbersPerResult) {
     showValidationError('Os 15 números devem ser diferentes.');
+    return null;
+  }
+
+  return result.sort((first, second) => first - second);
+}
+
+function getDrawNumbersForScoring() {
+  const values = drawInputs.map((input) => input.value.trim());
+
+  if (values.every((value) => value === '')) {
+    return currentDrawNumbers;
+  }
+
+  if (values.some((value) => value === '')) {
+    return null;
+  }
+
+  const result = values.map(Number);
+
+  if (
+    !result.every((number) => Number.isInteger(number) && number >= 1 && number <= numberCount) ||
+    new Set(result).size !== numbersPerResult
+  ) {
     return null;
   }
 
@@ -332,6 +415,22 @@ function drawSelectionRectangle() {
   selectionContext.strokeRect(left + 0.5, top + 0.5, width - 1, height - 1);
 }
 
+function updateSelectionLiveCount(event) {
+  const width = Math.abs(selectionDrag.end.x - selectionDrag.start.x) + 1;
+  const height = Math.abs(selectionDrag.end.y - selectionDrag.start.y) + 1;
+  const total = width * height;
+
+  selectionLiveCount.textContent = `${numberFormatter.format(total)} ${total === 1 ? 'cartão' : 'cartões'}`;
+  selectionLiveCount.hidden = false;
+
+  const left = Math.min(event.clientX + 14, window.innerWidth - selectionLiveCount.offsetWidth - 8);
+  const maxTop = window.innerHeight - document.querySelector('.canvas-size-bar').offsetHeight - selectionLiveCount.offsetHeight - 8;
+  const top = Math.min(event.clientY + 14, maxTop);
+
+  selectionLiveCount.style.left = `${Math.max(8, left)}px`;
+  selectionLiveCount.style.top = `${Math.max(8, top)}px`;
+}
+
 function showSelectionSummary(selection) {
   const left = Math.min(selection.start.x, selection.end.x);
   const top = Math.min(selection.start.y, selection.end.y);
@@ -467,12 +566,14 @@ function startSelection(event) {
   selectionDrag = { pointerId: event.pointerId, start: point, end: point };
   canvas.setPointerCapture(event.pointerId);
   drawSelectionRectangle();
+  updateSelectionLiveCount(event);
 }
 
 function moveOnCanvas(event) {
   if (selectionDrag !== null && event.pointerId === selectionDrag.pointerId) {
     selectionDrag.end = getCanvasPoint(event);
     drawSelectionRectangle();
+    updateSelectionLiveCount(event);
     return;
   }
 
@@ -488,6 +589,7 @@ function finishSelection(event) {
   drawSelectionRectangle();
   const completedSelection = selectionDrag;
   selectionDrag = null;
+  selectionLiveCount.hidden = true;
   showSelectionSummary(completedSelection);
 }
 
@@ -524,7 +626,6 @@ function showResult(event) {
 
 searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
-  clearHighlight();
 
   const result = getValidNumbers(numberInputs, 'da busca');
 
@@ -532,10 +633,21 @@ searchForm.addEventListener('submit', (event) => {
     return;
   }
 
+  clearHighlight();
+
   const rank = getRankForResult(result);
   const target = highlightResult(rank);
+  const drawNumbers = getDrawNumbersForScoring();
+  let score = '';
 
-  searchStatus.textContent = `Resultado ${numberFormatter.format(rank + 1)} destacado no canvas.`;
+  if (drawNumbers !== null) {
+    const drawnNumbers = new Set(drawNumbers);
+    const hits = result.reduce((total, number) => total + Number(drawnNumbers.has(number)), 0);
+    score = hits >= 11 ? `${hits} acertos` : `${hits} acertos (sem prêmio)`;
+  }
+
+  const scoreText = score === '' ? '' : ` ${score}.`;
+  searchStatus.textContent = `Resultado ${numberFormatter.format(rank + 1)} destacado no canvas.${scoreText}`;
   popup.hidden = true;
 
   const bounds = canvas.getBoundingClientRect();
@@ -555,6 +667,8 @@ drawForm.addEventListener('submit', (event) => {
     return;
   }
 
+  currentDrawNumbers = null;
+  configureCanvas();
   currentDrawNumbers = drawNumbers;
   const counts = generateDrawMatches(drawNumbers);
   const total = counts.slice(11).reduce((sum, count) => sum + count, 0);
@@ -572,6 +686,7 @@ canvas.addEventListener('pointermove', moveOnCanvas);
 canvas.addEventListener('pointerup', finishSelection);
 canvas.addEventListener('pointercancel', () => {
   selectionDrag = null;
+  selectionLiveCount.hidden = true;
   selectionContext.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
 });
 canvas.addEventListener('pointerleave', () => {
@@ -597,7 +712,7 @@ randomDrawButton.addEventListener('click', () => {
   pool.slice(0, numbersPerResult)
     .sort((first, second) => first - second)
     .forEach((number, index) => {
-      drawInputs[index].value = String(number);
+      drawInputs[index].value = String(number).padStart(2, '0');
     });
 
   drawStatus.textContent = 'Números aleatórios preenchidos. Clique em Gerar para aplicar ao canvas.';
@@ -609,12 +724,13 @@ function configureCanvas() {
 
   canvasDimensions.textContent = `Largura: ${numberFormatter.format(width)} px · Altura: ${numberFormatter.format(height)} px`;
 
+  canvasWrap.style.width = `${width}px`;
+  canvasWrap.style.height = `${height}px`;
+
   if (canvas.width === width && canvas.height === height) {
     return;
   }
 
-  canvasWrap.style.width = `${width}px`;
-  canvasWrap.style.height = `${height}px`;
   canvas.width = width;
   canvas.height = height;
   perfectCanvas.width = width;
@@ -627,6 +743,7 @@ function configureCanvas() {
   matchByPixel = new Uint8Array(pixelCount);
   highlightedPixel = null;
   selectionDrag = null;
+  selectionLiveCount.hidden = true;
   popup.hidden = true;
 
   context.fillStyle = '#ffffff';
@@ -644,3 +761,4 @@ window.addEventListener('resize', () => {
 });
 
 configureCanvas();
+requestAnimationFrame(configureCanvas);
