@@ -8,6 +8,8 @@
 </head>
 <body>
   <form id="result-search" class="result-search" aria-label="Buscar combinação" novalidate>
+    <div class="number-group">
+      <h2 class="number-group__title">Jogo</h2>
     <div class="number-inputs">
       <label class="number-field"><span aria-hidden="true">01</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 01" value="1"></label>
       <label class="number-field"><span aria-hidden="true">02</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 02" value="2"></label>
@@ -25,10 +27,13 @@
       <label class="number-field"><span aria-hidden="true">14</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 14" value="14"></label>
       <label class="number-field"><span aria-hidden="true">15</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Dezena 15" value="15"></label>
     </div>
+    </div>
     <button type="submit">Localizar</button>
     <output id="search-status" class="search-status" aria-live="polite"></output>
   </form>
   <form id="draw-search" class="result-search draw-search" aria-label="Resultado do sorteio" novalidate>
+    <div class="number-group">
+      <h2 class="number-group__title">Resultado</h2>
     <div class="number-inputs">
       <label class="number-field"><span aria-hidden="true">01</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 01"></label>
       <label class="number-field"><span aria-hidden="true">02</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 02"></label>
@@ -46,6 +51,7 @@
       <label class="number-field"><span aria-hidden="true">14</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 14"></label>
       <label class="number-field"><span aria-hidden="true">15</span><input class="number-input" type="number" min="1" max="25" step="1" inputmode="numeric" aria-label="Sorteio, dezena 15"></label>
     </div>
+    </div>
     <button type="submit">Gerar</button>
     <button id="draw-random" class="secondary-action" type="button">Aleatório</button>
     <output id="draw-status" class="search-status" aria-live="polite"></output>
@@ -60,8 +66,9 @@
   <dialog id="selection-dialog" class="validation-dialog selection-dialog" aria-labelledby="selection-title">
     <h2 id="selection-title">Cartões selecionados</h2>
     <p id="selection-total"></p>
+    <p id="selection-cost" class="selection-cost"></p>
     <ul class="selection-counts">
-      <li><span><i class="selection-swatch selection-swatch--zero"></i>0 pontos (sem prêmio)</span><strong id="selection-count-0"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--zero"></i>Sem prêmio</span><strong id="selection-count-0"></strong></li>
       <li><span><i class="selection-swatch selection-swatch--11"></i>11 pontos</span><strong id="selection-count-11"></strong></li>
       <li><span><i class="selection-swatch selection-swatch--12"></i>12 pontos</span><strong id="selection-count-12"></strong></li>
       <li><span><i class="selection-swatch selection-swatch--13"></i>13 pontos</span><strong id="selection-count-13"></strong></li>
@@ -91,6 +98,7 @@
     <canvas id="canvas" width="1920" height="1703" aria-label="Resultados da Lotofácil. Mova o mouse para ver uma combinação. Arraste com o botão esquerdo para selecionar uma região.">
       Seu navegador não oferece suporte ao elemento canvas.
     </canvas>
+    <canvas id="perfect-canvas" class="perfect-canvas" width="1920" height="1703" aria-hidden="true"></canvas>
     <canvas id="highlight-canvas" class="highlight-canvas" width="1920" height="1703" aria-hidden="true"></canvas>
     <canvas id="selection-canvas" class="selection-canvas" width="1920" height="1703" aria-hidden="true"></canvas>
   </div>

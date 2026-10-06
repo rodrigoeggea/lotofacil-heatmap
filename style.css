@@ -11,7 +11,7 @@ body {
 
 body {
   overflow: auto;
-  padding-bottom: 38px;
+  padding-bottom: 54px;
   background: #e8edf0;
 }
 
@@ -27,12 +27,23 @@ body {
   background: #f3f5f4;
 }
 
-.number-inputs {
+.number-group {
   flex: 0 1 908px;
+  width: min(100%, 908px);
+  min-width: 0;
+}
+
+.number-group__title {
+  margin: 0 0 8px;
+  color: #34434a;
+  font: 600 14px/1.2 system-ui, sans-serif;
+}
+
+.number-inputs {
   display: grid;
   grid-template-columns: repeat(15, minmax(0, 1fr));
   gap: 7px;
-  width: min(100%, 908px);
+  width: 100%;
   min-width: 0;
 }
 
@@ -109,9 +120,14 @@ body {
   flex-wrap: wrap;
 }
 
+@media (max-width: 1080px) {
+  .number-group {
+    flex-basis: 100%;
+  }
+}
+
 @media (max-width: 640px) {
   .number-inputs {
-    flex-basis: 100%;
     grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
   }
 
@@ -152,6 +168,12 @@ body {
 
 .selection-dialog {
   width: min(420px, calc(100vw - 32px));
+}
+
+.selection-cost {
+  margin-top: -12px !important;
+  color: #18252b !important;
+  font-weight: 700 !important;
 }
 
 .selection-dialog-actions,
@@ -266,6 +288,18 @@ body {
   width: 100%;
 }
 
+.canvas-wrap::after {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: #7d898e;
+  content: "";
+  pointer-events: none;
+}
+
 .canvas-wrap canvas {
   position: absolute;
   inset: 0;
@@ -279,6 +313,7 @@ body {
   cursor: crosshair;
 }
 
+.perfect-canvas,
 .highlight-canvas {
   pointer-events: none;
 }

@@ -2,6 +2,8 @@ const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
 const canvasWrap = document.querySelector('.canvas-wrap');
 const canvasDimensions = document.getElementById('canvas-dimensions');
+const perfectCanvas = document.getElementById('perfect-canvas');
+const perfectContext = perfectCanvas.getContext('2d');
 const highlightCanvas = document.getElementById('highlight-canvas');
 const highlightContext = highlightCanvas.getContext('2d');
 const selectionCanvas = document.getElementById('selection-canvas');
@@ -21,6 +23,7 @@ const validationDialog = document.getElementById('validation-dialog');
 const validationMessage = document.getElementById('validation-message');
 const selectionDialog = document.getElementById('selection-dialog');
 const selectionTotal = document.getElementById('selection-total');
+const selectionCost = document.getElementById('selection-cost');
 const selectionCounts = new Map(
   [0, 11, 12, 13, 14, 15].map((hits) => [hits, document.getElementById(`selection-count-${hits}`)])
 );
@@ -47,6 +50,8 @@ function combinationCount(total, selected) {
 const resultCount = combinationCount(numberCount, numbersPerResult);
 let pixelCount = canvas.width * canvas.height;
 const numberFormatter = new Intl.NumberFormat('pt-BR');
+const currencyFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+const ticketPrice = 3.5;
 let matchByPixel = new Uint8Array(pixelCount);
 const selectionPageSize = 100;
 let highlightedPixel = null;
@@ -246,17 +251,17 @@ function highlightPerfectMatch(rank) {
   const x = pixelIndex % canvas.width;
   const y = Math.floor(pixelIndex / canvas.width);
 
-  highlightContext.strokeStyle = '#18252b';
-  highlightContext.lineWidth = 2;
-  highlightContext.strokeRect(x - 4.5, y - 4.5, 10, 10);
-  highlightContext.strokeStyle = '#ffffff';
-  highlightContext.lineWidth = 1;
-  highlightContext.strokeRect(x - 2.5, y - 2.5, 6, 6);
-  highlightedPixel = { x, y };
+  perfectContext.strokeStyle = '#18252b';
+  perfectContext.lineWidth = 2;
+  perfectContext.strokeRect(x - 4.5, y - 4.5, 10, 10);
+  perfectContext.strokeStyle = '#ffffff';
+  perfectContext.lineWidth = 1;
+  perfectContext.strokeRect(x - 2.5, y - 2.5, 6, 6);
 }
 
 function generateDrawMatches(drawNumbers) {
   clearHighlight();
+  perfectContext.clearRect(0, 0, perfectCanvas.width, perfectCanvas.height);
   selectionContext.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
   matchByPixel.fill(0);
 
@@ -339,6 +344,7 @@ function showSelectionSummary(selection) {
   currentSelectionBounds = { left, top, right, bottom };
   const cardLabel = total === 1 ? 'cartão selecionado' : 'cartões selecionados';
   selectionTotal.textContent = `${numberFormatter.format(total)} ${cardLabel} nesta região`;
+  selectionCost.textContent = `Custo para jogar: ${currencyFormatter.format(total * ticketPrice)}`;
 
   for (const [hits, output] of selectionCounts) {
     output.textContent = numberFormatter.format(counts.get(hits));
@@ -571,6 +577,8 @@ function configureCanvas() {
   canvasWrap.style.height = `${height}px`;
   canvas.width = width;
   canvas.height = height;
+  perfectCanvas.width = width;
+  perfectCanvas.height = height;
   highlightCanvas.width = width;
   highlightCanvas.height = height;
   selectionCanvas.width = width;
