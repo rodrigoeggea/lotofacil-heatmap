@@ -418,6 +418,10 @@ body {
   margin-left: auto;
 }
 
+.selection-dialog-actions {
+  flex-wrap: wrap;
+}
+
 .selection-cards-dialog {
   width: min(760px, calc(100vw - 32px));
 }

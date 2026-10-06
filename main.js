@@ -42,6 +42,7 @@ const selectionPrize14 = document.getElementById('selection-prize-14');
 const selectionPrize15 = document.getElementById('selection-prize-15');
 const selectionPrizeTotal = document.getElementById('selection-prize-total');
 const showSelectionCardsButton = document.getElementById('show-selection-cards');
+const exportSelectionCsvButton = document.getElementById('export-selection-csv');
 const selectionCardsDialog = document.getElementById('selection-cards-dialog');
 const selectionPageLabel = document.getElementById('selection-page-label');
 const selectionCardList = document.getElementById('selection-card-list');
@@ -562,6 +563,45 @@ function renderSelectionCardsPage() {
   selectionNextButton.disabled = end >= total;
 }
 
+function exportSelectionCsv() {
+  const bounds = currentSelectionBounds;
+
+  if (bounds === null) {
+    return;
+  }
+
+  const header = Array.from(
+    { length: numbersPerResult },
+    (_, index) => `Dezena${String(index + 1).padStart(2, '0')}`
+  ).join(';');
+  const chunks = ['\uFEFF', `${header}\r\n`];
+  let rows = [];
+
+  for (let y = bounds.top; y <= bounds.bottom; y += 1) {
+    for (let x = bounds.left; x <= bounds.right; x += 1) {
+      const rank = resultRankAtPixel(y * canvas.width + x);
+      const result = getResultAt(rank);
+      rows.push(`${result.map((number) => String(number).padStart(2, '0')).join(';')}\r\n`);
+
+      if (rows.length === 10000) {
+        chunks.push(rows.join(''));
+        rows = [];
+      }
+    }
+  }
+
+  chunks.push(rows.join(''));
+  const file = new Blob(chunks, { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(file);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'cartoes-selecionados.csv';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 function openSelectionCards() {
   if (currentSelectionBounds === null) {
     return;
@@ -744,6 +784,7 @@ openSelectionButton.addEventListener('click', () => {
   }
 });
 showSelectionCardsButton.addEventListener('click', openSelectionCards);
+exportSelectionCsvButton.addEventListener('click', exportSelectionCsv);
 selectionPreviousButton.addEventListener('click', goToPreviousSelectionPage);
 selectionNextButton.addEventListener('click', goToNextSelectionPage);
 selectionPrize14.addEventListener('input', updateSelectionPrizeTotal);
