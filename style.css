@@ -192,6 +192,80 @@ body {
   justify-content: flex-end;
 }
 
+.hit-filter-dialog {
+  width: min(380px, calc(100vw - 32px));
+}
+
+.validation-dialog .hit-filter-form {
+  display: grid;
+  justify-content: stretch;
+  gap: 14px;
+}
+
+.hit-filter-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #34434a;
+  font: 13px/1.4 system-ui, sans-serif;
+}
+
+.hit-filter-option input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #176b57;
+}
+
+.hit-filter-all {
+  font-weight: 600;
+}
+
+.hit-filter-options {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #d0d8da;
+  border-radius: 3px;
+}
+
+.hit-filter-options legend {
+  padding: 0 5px;
+  color: #59666b;
+  font: 600 11px/1.3 system-ui, sans-serif;
+}
+
+.hit-filter-option strong {
+  margin-left: auto;
+  color: #18252b;
+  font-variant-numeric: tabular-nums;
+}
+
+.hit-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.hit-filter-actions button {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid #aab5b9;
+  border-radius: 3px;
+  background: #fff;
+  color: #34434a;
+  cursor: pointer;
+  font: 600 13px/1 system-ui, sans-serif;
+}
+
+.hit-filter-actions button[type="submit"] {
+  border-color: #176b57;
+  background: #176b57;
+  color: #fff;
+}
+
 .selection-dialog {
   width: min(520px, calc(100vw - 32px));
 }

@@ -54,6 +54,7 @@
     </div>
     <button type="submit">Gerar</button>
     <button id="draw-random" class="secondary-action" type="button">Aleatório</button>
+    <button id="open-hit-filter" class="secondary-action" type="button">Filtro</button>
     <output id="draw-status" class="search-status" aria-live="polite"></output>
   </form>
   <dialog id="validation-dialog" class="validation-dialog" aria-labelledby="validation-title">
@@ -61,6 +62,24 @@
     <p id="validation-message"></p>
     <form method="dialog">
       <button type="submit" autofocus>Entendi</button>
+    </form>
+  </dialog>
+  <dialog id="hit-filter-dialog" class="validation-dialog hit-filter-dialog" aria-labelledby="hit-filter-title">
+    <h2 id="hit-filter-title">Filtrar cartões</h2>
+    <form id="hit-filter-form" class="hit-filter-form">
+      <label class="hit-filter-option hit-filter-all"><input id="hit-filter-all" type="checkbox" checked>Mostrar tudo</label>
+      <fieldset class="hit-filter-options">
+        <legend>Faixas de acertos</legend>
+        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="11" checked><span>11 acertos</span><strong id="hit-filter-count-11">—</strong></label>
+        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="12" checked><span>12 acertos</span><strong id="hit-filter-count-12">—</strong></label>
+        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="13" checked><span>13 acertos</span><strong id="hit-filter-count-13">—</strong></label>
+        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="14" checked><span>14 acertos</span><strong id="hit-filter-count-14">—</strong></label>
+        <label class="hit-filter-option"><input class="hit-filter-tier" type="checkbox" value="15" checked><span>15 acertos</span><strong id="hit-filter-count-15">—</strong></label>
+      </fieldset>
+      <div class="hit-filter-actions">
+        <button id="cancel-hit-filter" class="secondary-action" type="button">Cancelar</button>
+        <button type="submit">Aplicar</button>
+      </div>
     </form>
   </dialog>
   <dialog id="selection-dialog" class="validation-dialog selection-dialog" aria-labelledby="selection-title">

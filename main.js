@@ -20,6 +20,12 @@ const drawForm = document.getElementById('draw-search');
 const drawInputs = [...drawForm.querySelectorAll('.number-input')];
 const drawStatus = document.getElementById('draw-status');
 const randomDrawButton = document.getElementById('draw-random');
+const openHitFilterButton = document.getElementById('open-hit-filter');
+const hitFilterDialog = document.getElementById('hit-filter-dialog');
+const hitFilterForm = document.getElementById('hit-filter-form');
+const hitFilterAll = document.getElementById('hit-filter-all');
+const hitFilterInputs = [...document.querySelectorAll('.hit-filter-tier')];
+const cancelHitFilterButton = document.getElementById('cancel-hit-filter');
 const validationDialog = document.getElementById('validation-dialog');
 const validationMessage = document.getElementById('validation-message');
 const selectionDialog = document.getElementById('selection-dialog');
@@ -43,6 +49,19 @@ const selectionNextButton = document.getElementById('selection-next');
 
 const numberCount = 25;
 const numbersPerResult = 15;
+const allHitTiers = [11, 12, 13, 14, 15];
+const hitColors = new Map([
+  [11, [255, 241, 118]],
+  [12, [253, 216, 53]],
+  [13, [76, 175, 80]],
+  [14, [251, 140, 0]],
+  [15, [211, 47, 47]]
+]);
+const hitFilterCounts = new Map(
+  allHitTiers.map((hits) => [hits, document.getElementById(`hit-filter-count-${hits}`)])
+);
+let visibleHitTiers = new Set(allHitTiers);
+let currentDrawCounts = null;
 
 function limitNumberInputLength(event) {
   const input = event.currentTarget;
@@ -325,14 +344,36 @@ function mergeSortedResults(first, second) {
   return result;
 }
 
-function paintResult(image, rank, color, hits) {
+function paintResult(rank, hits) {
   for (const pixelIndex of pixelIndexesAtRank(rank)) {
+    matchByPixel[pixelIndex] = hits;
+  }
+}
+
+function renderVisibleMatches() {
+  const image = context.createImageData(canvas.width, canvas.height);
+  image.data.fill(255);
+
+  for (let pixelIndex = 0; pixelIndex < pixelCount; pixelIndex += 1) {
+    const hits = matchByPixel[pixelIndex];
+    const color = hitColors.get(hits);
+
+    if (color === undefined || !visibleHitTiers.has(hits)) {
+      continue;
+    }
+
     const offset = pixelIndex * 4;
     image.data[offset] = color[0];
     image.data[offset + 1] = color[1];
     image.data[offset + 2] = color[2];
     image.data[offset + 3] = 255;
-    matchByPixel[pixelIndex] = hits;
+  }
+
+  context.putImageData(image, 0, 0);
+  perfectContext.clearRect(0, 0, perfectCanvas.width, perfectCanvas.height);
+
+  if (currentDrawNumbers !== null && visibleHitTiers.has(15)) {
+    highlightPerfectMatch(getRankForResult(currentDrawNumbers));
   }
 }
 
@@ -358,16 +399,7 @@ function generateDrawMatches(drawNumbers) {
   const drawnSet = new Set(drawNumbers);
   const otherNumbers = Array.from({ length: numberCount }, (_, index) => index + 1)
     .filter((number) => !drawnSet.has(number));
-  const image = context.createImageData(canvas.width, canvas.height);
-  image.data.fill(255);
   const counts = Array(numbersPerResult + 1).fill(0);
-  const colors = {
-    11: [255, 241, 118],
-    12: [253, 216, 53],
-    13: [76, 175, 80],
-    14: [251, 140, 0],
-    15: [211, 47, 47]
-  };
 
   for (let hits = 11; hits <= numbersPerResult; hits += 1) {
     const drawnCombinations = getCombinations(drawNumbers, hits);
@@ -376,19 +408,48 @@ function generateDrawMatches(drawNumbers) {
     for (const drawnCombination of drawnCombinations) {
       for (const otherCombination of otherCombinations) {
         const result = mergeSortedResults(drawnCombination, otherCombination);
-          paintResult(image, getRankForResult(result), colors[hits], hits);
+        paintResult(getRankForResult(result), hits);
         counts[hits] += 1;
       }
     }
   }
 
-  context.putImageData(image, 0, 0);
-
-  if (counts[numbersPerResult] > 0) {
-    highlightPerfectMatch(getRankForResult(drawNumbers));
-  }
+  renderVisibleMatches();
 
   return counts;
+}
+
+function getDrawStatus(counts) {
+  if (counts === null) {
+    return 'Filtro salvo. Clique em Gerar para aplicá-lo ao canvas.';
+  }
+
+  const visibleTiers = [...visibleHitTiers].sort((first, second) => first - second);
+
+  if (visibleTiers.length === 0) {
+    return 'Nenhuma faixa de acertos está selecionada.';
+  }
+
+  const total = visibleTiers.reduce((sum, hits) => sum + counts[hits], 0);
+  const breakdown = visibleTiers.map((hits) =>
+    `${numberFormatter.format(counts[hits])} com ${hits}`
+  ).join(', ');
+
+  return `${numberFormatter.format(total)} resultados pintados: ${breakdown} acertos.`;
+}
+
+function syncHitFilterAllCheckbox() {
+  const selectedCount = hitFilterInputs.filter((input) => input.checked).length;
+  hitFilterAll.checked = selectedCount === hitFilterInputs.length;
+  hitFilterAll.indeterminate = selectedCount > 0 && selectedCount < hitFilterInputs.length;
+}
+
+function updateHitFilterCounts() {
+  for (const [hits, output] of hitFilterCounts) {
+    output.textContent = currentDrawCounts === null
+      ? '—'
+      : numberFormatter.format(currentDrawCounts[hits]);
+  }
 }
 
 function getCanvasPoint(event) {
@@ -671,12 +732,10 @@ drawForm.addEventListener('submit', (event) => {
   configureCanvas();
   currentDrawNumbers = drawNumbers;
   const counts = generateDrawMatches(drawNumbers);
-  const total = counts.slice(11).reduce((sum, count) => sum + count, 0);
-  const breakdown = counts.slice(11).map((count, index) =>
-    `${numberFormatter.format(count)} com ${index + 11}`
-  ).join(', ');
+  currentDrawCounts = counts;
+  updateHitFilterCounts();
 
-  drawStatus.textContent = `${numberFormatter.format(total)} resultados pintados: ${breakdown} acertos.`;
+  drawStatus.textContent = getDrawStatus(counts);
   searchStatus.textContent = '';
   popup.hidden = true;
 });
@@ -700,6 +759,49 @@ selectionPreviousButton.addEventListener('click', goToPreviousSelectionPage);
 selectionNextButton.addEventListener('click', goToNextSelectionPage);
 selectionPrize14.addEventListener('input', updateSelectionPrizeTotal);
 selectionPrize15.addEventListener('input', updateSelectionPrizeTotal);
+
+openHitFilterButton.addEventListener('click', () => {
+  updateHitFilterCounts();
+
+  for (const input of hitFilterInputs) {
+    input.checked = visibleHitTiers.has(Number(input.value));
+  }
+
+  syncHitFilterAllCheckbox();
+  hitFilterDialog.showModal();
+});
+
+hitFilterAll.addEventListener('change', () => {
+  for (const input of hitFilterInputs) {
+    input.checked = hitFilterAll.checked;
+  }
+
+  hitFilterAll.indeterminate = false;
+});
+
+for (const input of hitFilterInputs) {
+  input.addEventListener('change', syncHitFilterAllCheckbox);
+}
+
+cancelHitFilterButton.addEventListener('click', () => {
+  hitFilterDialog.close();
+});
+
+hitFilterForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  visibleHitTiers = new Set(
+    hitFilterInputs.filter((input) => input.checked).map((input) => Number(input.value))
+  );
+
+  if (currentDrawNumbers !== null) {
+    clearHighlight();
+    renderVisibleMatches();
+    popup.hidden = true;
+  }
+
+  drawStatus.textContent = getDrawStatus(currentDrawCounts);
+  hitFilterDialog.close();
+});
 
 randomDrawButton.addEventListener('click', () => {
   const pool = Array.from({ length: numberCount }, (_, index) => index + 1);
@@ -750,7 +852,9 @@ function configureCanvas() {
   context.fillRect(0, 0, width, height);
 
   if (currentDrawNumbers !== null) {
-    generateDrawMatches(currentDrawNumbers);
+    currentDrawCounts = generateDrawMatches(currentDrawNumbers);
+    updateHitFilterCounts();
+    drawStatus.textContent = getDrawStatus(currentDrawCounts);
   }
 }
 
