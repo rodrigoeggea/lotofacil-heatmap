@@ -27,6 +27,12 @@ const selectionCost = document.getElementById('selection-cost');
 const selectionCounts = new Map(
   [0, 11, 12, 13, 14, 15].map((hits) => [hits, document.getElementById(`selection-count-${hits}`)])
 );
+const selectionTierPrizeTotals = new Map(
+  [0, 11, 12, 13, 14, 15].map((hits) => [hits, document.getElementById(`selection-tier-prize-total-${hits}`)])
+);
+const selectionPrize14 = document.getElementById('selection-prize-14');
+const selectionPrize15 = document.getElementById('selection-prize-15');
+const selectionPrizeTotal = document.getElementById('selection-prize-total');
 const showSelectionCardsButton = document.getElementById('show-selection-cards');
 const selectionCardsDialog = document.getElementById('selection-cards-dialog');
 const selectionPageLabel = document.getElementById('selection-page-label');
@@ -58,6 +64,7 @@ let highlightedPixel = null;
 let currentDrawNumbers = null;
 let selectionDrag = null;
 let currentSelectionBounds = null;
+let currentSelectionCounts = null;
 let selectionPageStarts = [0];
 let currentSelectionPage = 0;
 let selectionNextOffset = 0;
@@ -342,6 +349,7 @@ function showSelectionSummary(selection) {
 
   const total = (right - left + 1) * (bottom - top + 1);
   currentSelectionBounds = { left, top, right, bottom };
+  currentSelectionCounts = counts;
   const cardLabel = total === 1 ? 'cartão selecionado' : 'cartões selecionados';
   selectionTotal.textContent = `${numberFormatter.format(total)} ${cardLabel} nesta região`;
   selectionCost.textContent = `Custo para jogar: ${currencyFormatter.format(total * ticketPrice)}`;
@@ -350,7 +358,37 @@ function showSelectionSummary(selection) {
     output.textContent = numberFormatter.format(counts.get(hits));
   }
 
+  updateSelectionPrizeTotal();
   selectionDialog.showModal();
+}
+
+function getPrizeInputValue(input) {
+  const value = input.valueAsNumber;
+  return Number.isFinite(value) && value >= 0 ? value : 0;
+}
+
+function updateSelectionPrizeTotal() {
+  if (currentSelectionCounts === null) {
+    return;
+  }
+
+  const prizePerCard = new Map([
+    [0, 0],
+    [11, 7],
+    [12, 14],
+    [13, 35],
+    [14, getPrizeInputValue(selectionPrize14)],
+    [15, getPrizeInputValue(selectionPrize15)]
+  ]);
+  let totalPrize = 0;
+
+  for (const [hits, output] of selectionTierPrizeTotals) {
+    const tierTotal = currentSelectionCounts.get(hits) * prizePerCard.get(hits);
+    output.textContent = currencyFormatter.format(tierTotal);
+    totalPrize += tierTotal;
+  }
+
+  selectionPrizeTotal.textContent = currencyFormatter.format(totalPrize);
 }
 
 function renderSelectionCardsPage() {
@@ -472,7 +510,7 @@ function showResult(event) {
 
     scoreLabel.textContent = hits >= 11
       ? `Acertos: ${hits} pontos`
-      : `Acertos: ${hits} · 0 pontos (sem prêmio)`;
+      : `Acertos: ${hits} (sem prêmio)`;
     scoreLabel.dataset.tier = String(tier);
   }
 
@@ -545,6 +583,8 @@ canvas.addEventListener('pointerleave', () => {
 showSelectionCardsButton.addEventListener('click', openSelectionCards);
 selectionPreviousButton.addEventListener('click', goToPreviousSelectionPage);
 selectionNextButton.addEventListener('click', goToNextSelectionPage);
+selectionPrize14.addEventListener('input', updateSelectionPrizeTotal);
+selectionPrize15.addEventListener('input', updateSelectionPrizeTotal);
 
 randomDrawButton.addEventListener('click', () => {
   const pool = Array.from({ length: numberCount }, (_, index) => index + 1);

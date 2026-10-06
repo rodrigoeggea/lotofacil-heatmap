@@ -67,14 +67,21 @@
     <h2 id="selection-title">Cartões selecionados</h2>
     <p id="selection-total"></p>
     <p id="selection-cost" class="selection-cost"></p>
+    <div class="selection-counts-header" aria-hidden="true">
+      <span>Faixa</span>
+      <span>Cartões</span>
+      <span>Prêmio por cartão</span>
+      <span>Prêmio total</span>
+    </div>
     <ul class="selection-counts">
-      <li><span><i class="selection-swatch selection-swatch--zero"></i>Sem prêmio</span><strong id="selection-count-0"></strong></li>
-      <li><span><i class="selection-swatch selection-swatch--11"></i>11 pontos</span><strong id="selection-count-11"></strong></li>
-      <li><span><i class="selection-swatch selection-swatch--12"></i>12 pontos</span><strong id="selection-count-12"></strong></li>
-      <li><span><i class="selection-swatch selection-swatch--13"></i>13 pontos</span><strong id="selection-count-13"></strong></li>
-      <li><span><i class="selection-swatch selection-swatch--14"></i>14 pontos</span><strong id="selection-count-14"></strong></li>
-      <li><span><i class="selection-swatch selection-swatch--15"></i>15 pontos</span><strong id="selection-count-15"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--zero"></i>Sem prêmio</span><strong id="selection-count-0"></strong><span class="selection-prize-fixed">—</span><strong id="selection-tier-prize-total-0" class="selection-tier-prize-total"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--11"></i>11 acertos</span><strong id="selection-count-11"></strong><span class="selection-prize-fixed">R$ 7,00</span><strong id="selection-tier-prize-total-11" class="selection-tier-prize-total"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--12"></i>12 acertos</span><strong id="selection-count-12"></strong><span class="selection-prize-fixed">R$ 14,00</span><strong id="selection-tier-prize-total-12" class="selection-tier-prize-total"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--13"></i>13 acertos</span><strong id="selection-count-13"></strong><span class="selection-prize-fixed">R$ 35,00</span><strong id="selection-tier-prize-total-13" class="selection-tier-prize-total"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--14"></i>14 acertos</span><strong id="selection-count-14"></strong><label class="selection-prize-input"><span>R$</span><input id="selection-prize-14" class="number-input selection-prize-field" type="number" min="0" step="0.01" value="1000" aria-label="Prêmio por cartão com 14 acertos"></label><strong id="selection-tier-prize-total-14" class="selection-tier-prize-total"></strong></li>
+      <li><span><i class="selection-swatch selection-swatch--15"></i>15 acertos</span><strong id="selection-count-15"></strong><label class="selection-prize-input"><span>R$</span><input id="selection-prize-15" class="number-input selection-prize-field" type="number" min="0" step="0.01" value="1000000" aria-label="Prêmio por cartão com 15 acertos"></label><strong id="selection-tier-prize-total-15" class="selection-tier-prize-total"></strong></li>
     </ul>
+    <p class="selection-prize-total"><span>Prêmio total geral</span><strong id="selection-prize-total">R$ 0,00</strong></p>
     <div class="selection-dialog-actions">
       <button id="show-selection-cards" type="button">Ver cartões</button>
       <form method="dialog">

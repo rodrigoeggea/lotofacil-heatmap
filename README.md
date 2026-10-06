@@ -13,6 +13,7 @@ Não é necessário instalar dependências nem compilar o projeto. Abra `index.h
 - **Cores:** 11 acertos em amarelo, 12 em amarelo mais escuro, 13 em verde, 14 em laranja e 15 em vermelho. A combinação com 15 acertos recebe um contorno especial.
 - **Hover:** passe o ponteiro sobre um cartão para ver suas dezenas, posição e pontuação em relação ao último sorteio gerado.
 - **Selecionar região:** clique e arraste com o botão esquerdo sobre o canvas. Ao soltar, o resumo mostra quantos cartões da área estão em cada faixa de pontuação.
+- **Prêmios:** o resumo calcula os valores fixos de 11, 12 e 13 acertos e permite editar os prêmios por cartão de 14 e 15 acertos. O total é atualizado automaticamente.
 - **Ver cartões:** no resumo da seleção, clique em **Ver cartões** para abrir a lista das combinações incluídas. A lista é paginada em grupos de até 100 cartões.
 
 A faixa de **0 pontos** representa cartões sem prêmio, isto é, com menos de 11 acertos. Como o cartão e o sorteio têm 15 dezenas em um universo de 25, zero acertos reais não é possível; o mínimo é 5.
